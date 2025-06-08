@@ -1,11 +1,16 @@
 import os
 import time
 import random
+import json
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
 def main():
+    user_name = input("Please input your username: ")
+    high_score = 0
+
     lives = 3
     while lives >= 0:
         clear_terminal()
@@ -41,7 +46,8 @@ def main():
         
         if(result == user_input):
             print("You win! The number was " + str(result) + " and you guessed it correctly!")
-            return
+            print("1 point has been added to your score.")
+            high_score += 1
         else:
             print("\033[?25l", end="")
             print("You lost :( The number was " + str(result) + "\nBetter luck next time!")
@@ -49,6 +55,15 @@ def main():
             lives -= 1
             time.sleep(3.5)
             print("\033[?25h", end="")
+
+    user_data_object = {
+        "user_name": user_name,
+        "highscore": high_score
+    }
+    json_object = json.dumps(user_data_object, indent=4)
+
+    with open("user_data.json", "w") as outfile:
+        outfile.write(user_data_object)
 
     print("Out of lives.")
 
