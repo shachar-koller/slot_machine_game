@@ -6,40 +6,51 @@ def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def main():
-
-    clear_terminal()
-    try:
-        user_input = int(input("Choose a number between 1 and 10: "))
-        if not 1 <= user_input <= 10:
-            raise ValueError
-    except ValueError:
-        print("Invalid input. Please enter a number from 1 to 10.")
-        return
-
-    for i in range(100):
+    lives = 3
+    while lives >= 0:
         clear_terminal()
-        print("\033[?25l", end="")
+        try:
+            user_input = int(input("Choose a number between 1 and 10: "))
+            if not 1 <= user_input <= 10:
+                raise ValueError
+        except ValueError:
+            time.sleep(1.5)
+            continue
+
+        for i in range(100):
+            clear_terminal()
+            print("\033[?25l", end="")
+            print("Choosing number...")
+            number = random.randint(1, 10)
+            print(number)
+            print("\nYour guess was:", user_input)
+            time.sleep(0.01) 
+        
+        result = random.randint(1,10)
+        clear_terminal()
         print("Choosing number...")
-        number = random.randint(1, 10)
-        print(number)
-        time.sleep(0.01) 
-    
-    result = random.randint(1,10)
-    clear_terminal()
-    print("Choosing number...")
-    print(result)
-    time.sleep(0.4)
+        print(result)
+        print("\nYour guess was:", user_input)
+        time.sleep(1)
 
 
-    print("\033[?25h", end="")
-    clear_terminal()
+        print("\033[?25h", end="")
+        clear_terminal()
 
 
-    
-    if(result == user_input):
-        print("You win! The number was " + str(result) + " and you guessed it correctly!")
-    else:
-        print("You lost :( The number was " + str(result) + "\nBetter luck next time!")
+        
+        if(result == user_input):
+            print("You win! The number was " + str(result) + " and you guessed it correctly!")
+            return
+        else:
+            print("\033[?25l", end="")
+            print("You lost :( The number was " + str(result) + "\nBetter luck next time!")
+            print(f"Subtracting 1 life. Lives remaining: {lives}")
+            lives -= 1
+            time.sleep(3.5)
+            print("\033[?25h", end="")
+
+    print("Out of lives.")
 
 play_again = True
 while play_again == True:
