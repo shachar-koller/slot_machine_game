@@ -3,73 +3,161 @@ import time
 import random
 import json
 
-def clear_terminal():
-    os.system('cls' if os.name == 'nt' else 'clear')
+#add a display leaderboard feature
+#make it that it can save multiple user's highscores
+
+class slot_machine_game:
+    MAX_LIVES = 3
+    GUESS_MINIMUM = 1
+    GUESS_MAXIMUM = 2
+    DATA_FILE = "user_data.json"
+
+    def __init__(self, user_name):
+        self.user_name = user_name
+        self.high_score = self.load_highscore()
+        self.current_score = 0
+        self.lives = self.MAX_LIVES
+
+    def clear_terminal(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+    def hide_cursor(self):
+        print("\033[?25l", end="")  # Hide cursor
+
+    def show_cursor(self):
+        print("\033[?25h", end="")  # Show cursor again
 
 
-def main():
-    user_name = input("Please input your username: ")
-    high_score = 0
-
-    lives = 3
-    while lives >= 0:
-        clear_terminal()
+    def load_highscore(self):
         try:
-            user_input = int(input("Choose a number between 1 and 10: "))
-            if not 1 <= user_input <= 10:
-                raise ValueError
-        except ValueError:
-            time.sleep(1.5)
-            continue
+            with open(self.DATA_FILE, 'r') as file:
+                data = json.load(file)
+                if data.get("user_name") == self.user_name:
+                    return data.get("highscore", 0)
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        return 0
+    
+    def save_highscore(self):
+        data = {
+            "user_name": self.user_name,
+            "highscore": self.current_score
+        }
+        with open(self.DATA_FILE, 'w') as file:
+            json.dump(data, file, indent=4)
 
-        for i in range(100):
-            clear_terminal()
-            print("\033[?25l", end="")
-            print("Choosing number...")
-            number = random.randint(1, 10)
-            print(number)
-            print("\nYour guess was:", user_input)
-            time.sleep(0.01) 
+    def get_user_input(self):
+        try:
+            guess = int(input(f"Choose a number between {self.GUESS_MINIMUM} and {self.GUESS_MAXIMUM}: "))
+            if self.GUESS_MINIMUM <= guess <= self.GUESS_MAXIMUM:
+                return guess
+            raise ValueError
+        except ValueError:
+            print("Invalid input.")
+            time.sleep(1.5)
+            return None
         
-        result = random.randint(1,10)
-        clear_terminal()
+    def play_round(self):
+        self.clear_terminal()
+        guess = self.get_user_input()
+        if guess is None:
+            return
+        
+        #Animatino section
+        self.hide_cursor()
+        for i in range(100):
+            self.clear_terminal()
+            print("Choosing number...")
+            print(random.randint(self.GUESS_MINIMUM, self.GUESS_MAXIMUM))
+            print("\nYour guess was:", guess)
+            time.sleep(0.01)
+
+        self.clear_terminal()
+
+        result = random.randint(self.GUESS_MINIMUM, self.GUESS_MAXIMUM)
         print("Choosing number...")
         print(result)
-        print("\nYour guess was:", user_input)
-        time.sleep(1)
+        print("\nYour guess was:", guess)
+        time.sleep(0.5)
 
-
-        print("\033[?25h", end="")
-        clear_terminal()
-
-
-        
-        if(result == user_input):
-            print("You win! The number was " + str(result) + " and you guessed it correctly!")
-            print("1 point has been added to your score.")
-            high_score += 1
+        if guess == result:
+            print("✅ Correct!")
+            self.current_score += 1
         else:
-            print("\033[?25l", end="")
-            print("You lost :( The number was " + str(result) + "\nBetter luck next time!")
-            print(f"Subtracting 1 life. Lives remaining: {lives}")
-            lives -= 1
-            time.sleep(3.5)
-            print("\033[?25h", end="")
+            print("\n❌ Wrong!")
+            self.lives -= 1
+            print(f"Subtracting one life. Lives left: {self.lives}")
+        time.sleep(3)
+        self.show_cursor()
 
-    user_data_object = {
-        "user_name": user_name,
-        "highscore": high_score
-    }
-    json_object = json.dumps(user_data_object, indent=4)
+    def game_loop(self):
+        while self.lives > 0:
+            self.play_round()
 
-    with open("user_data.json", "w") as outfile:
-        outfile.write(json_object)
+        self.clear_terminal()
+        print("Game Over!")
 
-    print("Out of lives.")
+        if self.current_score > self.high_score:
+            print(f"🎉 New highscore: {self.current_score}")
+            self.save_highscore()
+        else:
+            print(f"Your score: {self.current_score}")
+            print(f"Your highscore: {self.high_score}")
 
-play_again = True
-while play_again == True:
+
+def run_dev_menu():
+        print("🛠 Dev mode activated. What would you like to do?")
+        print("Type A to erase all saved data")
+        print("Type B to run a save data test")
+        dev_input = input(">> ").strip()
+
+        if dev_input.upper() == "A":
+            if os.path.exists("user_data.json"):
+                os.remove("user_data.json")
+                print("All saved data deleted.")
+            else:
+                print("No saved data to delete.")
+            time.sleep(2)
+
+        elif dev_input.upper() == "B":
+            test_user = "test_user"
+            test_score = random.randint(5, 15)
+            test_game = slot_machine_game(test_user)
+            test_game.current_score = test_score
+            test_game.save_highscore()
+
+            loaded_game = slot_machine_game(test_user)
+            loaded_score = loaded_game.high_score
+
+            if loaded_score == test_score:
+                print(f"✅ Save/load test passed. Score {test_score} was saved and loaded correctly.")
+            else:
+                print(f"❌ Test failed. Saved {test_score}, but loaded {loaded_score}.")
+
+            if os.path.exists("user_data.json"):
+                os.remove("user_data.json")
+                print()
+
+        else:
+            print("Invalid dev menu option.")
+
+
+              
+
+def main():
+    user_name = input("Enter your username: ").strip()
+
+    if user_name == "admin":
+        run_dev_menu()
+        return
+        
+    while True:
+        game = slot_machine_game(user_name)
+        game.game_loop()
+        again = input("Play again? (Y/N): ").strip().lower()
+        if again != 'y':
+            break
+
+if __name__ == "__main__":
+    print("\033[?25h", end="")
     main()
-    again = input("\nDo you want to play again? Press Y for yes, and N for no: ").lower()
-    if again != 'y':
-        play_again = False
