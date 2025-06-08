@@ -63,7 +63,7 @@ def main():
     json_object = json.dumps(user_data_object, indent=4)
 
     with open("user_data.json", "w") as outfile:
-        outfile.write(user_data_object)
+        outfile.write(json_object)
 
     print("Out of lives.")
 
