@@ -18,7 +18,7 @@ A terminal-based guessing game with user persistence and leaderboards.
 - Terminal animations and visual feedback
 
 ## ⚙️ Technical Highlights
-- **Separation of Concerns**: Game logic, data management, and UI split into different files
+- **Separation of Logic**: Game logic, data management, and UI split into different files
 - **Error Handling**: Robust file I/O with graceful fallbacks
 - **Configuration Management**: Centralized settings system
 - **Developer Tools**: Built-in admin interface for testing
