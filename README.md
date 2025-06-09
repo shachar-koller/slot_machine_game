@@ -3,7 +3,9 @@
 A terminal-based guessing game with user persistence and leaderboards.
 
 ## 🎮 Quick Demo
-[![Video Demonstration](https://img.youtube.com/vi/KKmS28tzaKY/0.jpg)](https://www.youtube.com/watch?v=KKmS28tzaKY)
+> Click the box below to watch a video demonstration:
+>
+>[![Video Demonstration](https://img.youtube.com/vi/KKmS28tzaKY/0.jpg)](https://www.youtube.com/watch?v=KKmS28tzaKY)
 
 ## ✨ Features
 - Multi-user system with JSON data persistence
