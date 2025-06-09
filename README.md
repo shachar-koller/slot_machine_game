@@ -5,7 +5,10 @@ A terminal-based guessing game with user persistence and leaderboards.
 ## 🎮 Quick Demo
 > Click the box below to watch a video demonstration:
 >
->[![Video Demonstration](https://img.youtube.com/vi/KKmS28tzaKY/0.jpg)](https://www.youtube.com/watch?v=KKmS28tzaKY)
+> <a href="https://www.youtube.com/watch?v=KKmS28tzaKY" target="_blank" rel="noopener noreferrer">
+>   <img src="https://img.youtube.com/vi/KKmS28tzaKY/0.jpg" alt="Video Demonstration">
+> </a>
+
 
 ## ✨ Features
 - Multi-user system with JSON data persistence
