@@ -14,7 +14,7 @@ class SlotMachineGame:
     def get_user_input(self):
         """Get and validate user input."""
         try:
-            guess = int(input(f"Choose a number between {GameConfig.GUESS_MINIMUM} and {GameConfig.GUESS_MAXIMUM}: "))
+            guess = int(input(f"Choose a number between {GameConfig.GUESS_MINIMUM} and {GameConfig.GUESS_MAXIMUM}\n> "))
             if GameConfig.GUESS_MINIMUM <= guess <= GameConfig.GUESS_MAXIMUM:
                 return guess
             raise ValueError
@@ -36,7 +36,7 @@ class SlotMachineGame:
             DisplayManager.clear_screen()
             print("Choosing number...")
             print(random.randint(GameConfig.GUESS_MINIMUM, GameConfig.GUESS_MAXIMUM))
-            print("\nYour guess was:", guess)
+            print("Your guess was:", guess)
             time.sleep(GameConfig.ANIMATION_SPEED)
 
         DisplayManager.clear_screen()
@@ -44,7 +44,7 @@ class SlotMachineGame:
         result = random.randint(GameConfig.GUESS_MINIMUM, GameConfig.GUESS_MAXIMUM)
         print("Choosing number...")
         print(result)
-        print("\nYour guess was:", guess)
+        print("Your guess was:", guess)
         time.sleep(0.5)
 
         if guess == result:
@@ -54,7 +54,7 @@ class SlotMachineGame:
             print(f"\n{GameConfig.WRONG_EMOJI} Wrong!")
             self.lives -= 1
             print(f"Subtracting one life. Lives left: {self.lives}")
-        
+
         time.sleep(3)
         DisplayManager.show_cursor()
 
@@ -75,7 +75,7 @@ class SlotMachineGame:
             print(f"Your highscore: {self.high_score}")
 
         print()
-        print("Press 'S' to show leaderboard or any other key to continue...")
+        print("Press 's' to show leaderboard or any other key to continue...")
         choice = input(">> ").strip().lower()
         if choice == 's':
             DisplayManager.clear_screen()
